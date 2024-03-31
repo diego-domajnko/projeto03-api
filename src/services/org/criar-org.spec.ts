@@ -3,27 +3,33 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { CreateOrgService } from "./criar-org";
 import { EmailJaExistenteError } from "../errors/email-ja-existente-error";
 import { CriacaoSenhaInvalidaError } from "../errors/criacao-senha-invalida-error";
+import { InMemoryUfRepository } from "@/repositories/in-memory/in-memory-uf";
+import { InMemoryLocalizacaoRepository } from "@/repositories/in-memory/in-memory-localizacao";
 
 describe("Usos de caso de criação de organização", () => {
-  let criarOrgRepository: InMemoryOrgRepository;
+  let orgRepository: InMemoryOrgRepository;
+  let localidadeRepository: InMemoryLocalizacaoRepository;
+  let ufRepository: InMemoryUfRepository;
   let sut: CreateOrgService;
 
   beforeEach(() => {
-    criarOrgRepository = new InMemoryOrgRepository();
-    sut = new CreateOrgService(criarOrgRepository);
+    orgRepository = new InMemoryOrgRepository();
+    localidadeRepository = new InMemoryLocalizacaoRepository();
+    ufRepository = new InMemoryUfRepository();
+    sut = new CreateOrgService(orgRepository, localidadeRepository, ufRepository);
   });
 
   it("Deve criar uma organização com sucesso", async () => {
     await sut.execute({
       email: "jhondoe@example.com",
-      cep: "11111-000",
+      cep: "01001000",
       endereco: "Rua teste, 123",
       password: "Teste12",
       responsavel: "Jhon Doe",
       whatsapp: "51999999999",
     });
 
-    const org = await criarOrgRepository.findByEmail("jhondoe@example.com");
+    const org = await orgRepository.findByEmail("jhondoe@example.com");
 
     expect(org).not.toBeNull();
   });
@@ -31,7 +37,7 @@ describe("Usos de caso de criação de organização", () => {
   it("Não deve ser possível criar uma organização com um email já existente", async () => {
     await sut.execute({
       email: "jhondoe@example.com",
-      cep: "11111-000",
+      cep: "01001-000",
       endereco: "Rua teste, 123",
       password: "Teste12",
       responsavel: "Jhon Doe",
@@ -42,7 +48,7 @@ describe("Usos de caso de criação de organização", () => {
       async () =>
         await sut.execute({
           email: "jhondoe@example.com",
-          cep: "11111-000",
+          cep: "01001-000",
           endereco: "Rua teste, 123",
           password: "Teste123",
           responsavel: "Jhon Doe",

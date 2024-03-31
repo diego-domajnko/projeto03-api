@@ -13,9 +13,9 @@ describe("Usos de caso de cadastro de cidade", () => {
   });
 
   it("Deve cadastrar uma cidade", async () => {
-    const local = await sut.execute({ cep: "01001000" });
+    const { localizacao } = await sut.execute({ cidade: "São Paulo", uf: "SP" });
 
-    expect(local).toEqual(
+    expect(localizacao).toEqual(
       expect.objectContaining({
         cidade: expect.any(String),
         uf: expect.any(String),
@@ -23,9 +23,12 @@ describe("Usos de caso de cadastro de cidade", () => {
     );
   });
 
-  it("Não deve ser possivel cadastrar uma cidade com o cep inexistente", async () => {
-    expect(async () => {
-      await sut.execute({ cep: "00000000" });
-    }).rejects.toBeInstanceOf(CidadeNaoEncontradaError);
+  it("Não deve ser possível cadastrar duas cidades iguais", async () => {
+    await sut.execute({ cidade: "São Paulo", uf: "SP" });
+    await sut.execute({ cidade: "São Paulo", uf: "SP" });
+
+    const localizacoes = await localizacaoRepository.findAll();
+
+    expect(localizacoes).toHaveLength(1);
   });
 });

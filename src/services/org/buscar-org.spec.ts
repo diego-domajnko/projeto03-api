@@ -14,7 +14,7 @@ describe("Usos de caso de validação de organização", () => {
   });
 
   it("Deve retornar uma organização", async () => {
-    await orgRepository.create({
+    orgRepository.items.push({
       email: "jhondoe@example.com",
       cep: "99999-999",
       endereco: "Teste",
@@ -22,6 +22,8 @@ describe("Usos de caso de validação de organização", () => {
       password_hash: await hash("Teste12", 6),
       responsavel: "Jhon Doe",
       whatsapp: "(51)99999-9999",
+      localizacao_id: 1,
+      uf_id: 1,
     });
 
     const { org } = await sut.execute({ id: "1" });

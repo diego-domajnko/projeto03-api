@@ -13,22 +13,84 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Idade {
+  FILHOTE
+  ADULTO
+  SENIOR
+}
+
+enum Porte {
+  PEQUENO
+  MEDIO
+  GRANDE
+}
+
+enum Energia {
+  BAIXA
+  MEDIA
+  ALTA
+}
+
+enum Independencia {
+  BAIXO
+  MEDIO
+  ALTO
+}
+
+enum Ambiente {
+  AMPLO
+  MEDIO
+  PEQUENO
+}
+
 model Org {
-  id            String @id @default(uuid())
-  responsavel   String
-  email         String @unique
-  cep           String
-  endereco      String
-  whatsapp      String @unique
-  password_hash String
+  id             String      @id @default(uuid())
+  responsavel    String
+  email          String      @unique
+  cep            String
+  endereco       String
+  whatsapp       String      @unique
+  password_hash  String
+  pets           Pet[]
+  localizacao    Localizacao @relation(fields: [localizacao_id], references: [id])
+  localizacao_id Int
+  uf             Uf?         @relation(fields: [uf_id], references: [id])
+  uf_id          Int?
 
   @@map("orgs")
 }
 
 model Localizacao {
   id     Int    @id @default(autoincrement())
-  uf     String @unique
+  Uf     Uf     @relation(fields: [uf], references: [uf])
+  uf     String
   cidade String
+  orgs   Org[]
 
   @@map("localizacoes")
+}
+
+model Uf {
+  id          Int           @id @default(autoincrement())
+  uf          String        @unique
+  localizacao Localizacao[]
+  orgs        Org[]
+
+  @@map("ufs")
+}
+
+model Pet {
+  id            String         @id @default(uuid())
+  nome          String
+  sobre         String?
+  idade         Idade?
+  porte         Porte?
+  energia       Energia?
+  independencia Independencia?
+  ambiente      Ambiente?
+  requisitos    String?
+  org           Org            @relation(fields: [org_id], references: [id])
+  org_id        String
+
+  @@map("pets")
 }

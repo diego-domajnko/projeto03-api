@@ -1,33 +1,25 @@
 import { LocalizacaoRepository } from "@/repositories/localizacao";
-import { CidadeNaoEncontradaError } from "../errors/cidade-nao-encontrada-error";
+import { Localizacao } from "@prisma/client";
 
 interface CadastrarCidadeReq {
-  cep: string;
+  cidade: string;
+  uf: string;
 }
 
 interface CadastrarCidadeRes {
-  cidade: string;
-  uf: string;
+  localizacao: Localizacao;
 }
 
 export class CadastrarCidadeService {
   constructor(private localizacaoRepository: LocalizacaoRepository) {}
 
-  async execute({ cep }: CadastrarCidadeReq): Promise<CadastrarCidadeRes> {
-    const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-    const { localidade, uf } = await response.json();
+  async execute(localizacao: CadastrarCidadeReq): Promise<CadastrarCidadeRes> {
+    let novaLocalizacao = await this.localizacaoRepository.find(localizacao);
 
-    if (!localidade || !uf) {
-      throw new CidadeNaoEncontradaError();
+    if (!novaLocalizacao) {
+      novaLocalizacao = await this.localizacaoRepository.create(localizacao);
     }
 
-    const novaLocalizacao = {
-      cidade: localidade,
-      uf,
-    };
-
-    await this.localizacaoRepository.create(novaLocalizacao);
-
-    return novaLocalizacao;
+    return { localizacao: novaLocalizacao };
   }
 }

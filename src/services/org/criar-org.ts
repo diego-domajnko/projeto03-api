@@ -3,6 +3,11 @@ import { hash } from "bcrypt";
 import { z } from "zod";
 import { CriacaoSenhaInvalidaError } from "../errors/criacao-senha-invalida-error";
 import { EmailJaExistenteError } from "../errors/email-ja-existente-error";
+import { LocalizacaoRepository } from "@/repositories/localizacao";
+import { CadastrarCidadeService } from "../localizacao/cadastrar-cidade";
+import { UfsRepository } from "@/repositories/uf";
+import { fetchCep } from "@/utils/fetchCep";
+import { CriarUFService } from "../uf/criar-uf";
 
 interface CreateOrgReq {
   responsavel: string;
@@ -14,7 +19,11 @@ interface CreateOrgReq {
 }
 
 export class CreateOrgService {
-  constructor(private orgRepository: OrgRepository) {}
+  constructor(
+    private orgRepository: OrgRepository,
+    private localizacaoRepository: LocalizacaoRepository,
+    private ufRepository: UfsRepository
+  ) {}
 
   async execute(data: CreateOrgReq): Promise<void> {
     const createOrgBodySchema = z.object({
@@ -51,6 +60,13 @@ export class CreateOrgService {
       throw new EmailJaExistenteError();
     }
 
+    const { uf, cidade } = await fetchCep(cep);
+
+    const cadastrarUfService = new CriarUFService(this.ufRepository);
+    await cadastrarUfService.execute({ uf });
+    const cadastrarCidadeService = new CadastrarCidadeService(this.localizacaoRepository);
+    const { localizacao } = await cadastrarCidadeService.execute({ cidade, uf });
+
     await this.orgRepository.create({
       responsavel,
       email,
@@ -58,6 +74,7 @@ export class CreateOrgService {
       endereco,
       whatsapp,
       password_hash: await hash(password, 6),
+      localizacao_id: localizacao.id,
     });
   }
 }

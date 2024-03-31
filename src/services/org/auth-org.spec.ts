@@ -1,8 +1,8 @@
 import { InMemoryOrgRepository } from "@/repositories/in-memory/in-memory-org";
-import { beforeEach, describe, expect, it } from "vitest";
-import { AuthOrgService } from "./auth-org";
 import { hash } from "bcrypt";
+import { beforeEach, describe, expect, it } from "vitest";
 import { CredenciaisInvalidasError } from "../errors/credencials-invalidas-error";
+import { AuthOrgService } from "./auth-org";
 
 describe("Uso de caso de autenticação de organização", () => {
   let orgRepository: InMemoryOrgRepository;
@@ -12,7 +12,7 @@ describe("Uso de caso de autenticação de organização", () => {
     orgRepository = new InMemoryOrgRepository();
     sut = new AuthOrgService(orgRepository);
 
-    await orgRepository.create({
+    orgRepository.items.push({
       email: "jhondoe@example.com",
       cep: "99999-999",
       endereco: "Teste",
@@ -20,6 +20,8 @@ describe("Uso de caso de autenticação de organização", () => {
       password_hash: await hash("Teste12", 6),
       responsavel: "Jhon Doe",
       whatsapp: "(51)99999-9999",
+      localizacao_id: 1,
+      uf_id: 1,
     });
   });
 
