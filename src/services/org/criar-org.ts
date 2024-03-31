@@ -1,8 +1,8 @@
 import { OrgRepository } from "@/repositories/org";
 import { hash } from "bcrypt";
 import { z } from "zod";
-import { CriacaoSenhaInvalidaError } from "./errors/criacao-senha-invalida-error";
-import { EmailJaExistenteError } from "./errors/email-ja-existente-error";
+import { CriacaoSenhaInvalidaError } from "../errors/criacao-senha-invalida-error";
+import { EmailJaExistenteError } from "../errors/email-ja-existente-error";
 
 interface CreateOrgReq {
   responsavel: string;

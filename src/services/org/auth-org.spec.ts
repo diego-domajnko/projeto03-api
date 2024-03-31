@@ -2,7 +2,7 @@ import { InMemoryOrgRepository } from "@/repositories/in-memory/in-memory-org";
 import { beforeEach, describe, expect, it } from "vitest";
 import { AuthOrgService } from "./auth-org";
 import { hash } from "bcrypt";
-import { CredenciaisInvalidasError } from "./errors/credencials-invalidas-error";
+import { CredenciaisInvalidasError } from "../errors/credencials-invalidas-error";
 
 describe("Uso de caso de autenticação de organização", () => {
   let orgRepository: InMemoryOrgRepository;

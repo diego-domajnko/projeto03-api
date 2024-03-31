@@ -24,3 +24,11 @@ model Org {
 
   @@map("orgs")
 }
+
+model Localizacao {
+  id     Int    @id @default(autoincrement())
+  uf     String @unique
+  cidade String
+
+  @@map("localizacoes")
+}

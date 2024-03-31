@@ -1,19 +1,19 @@
 import { OrgRepository } from "@/repositories/org";
 import { Org } from "@prisma/client";
-import { OrganizacaoNaoEncontradaError } from "./errors/organizacao-nao-encontrada-error";
+import { OrganizacaoNaoEncontradaError } from "../errors/organizacao-nao-encontrada-error";
 
-interface OrgReq {
+interface BuscarOrgReq {
   id: string;
 }
 
-interface OrgRes {
+interface BuscarOrgRes {
   org: Org;
 }
 
-export class OrgService {
+export class BuscarOrgService {
   constructor(private orgRepository: OrgRepository) {}
 
-  async execute({ id }: OrgReq): Promise<OrgRes> {
+  async execute({ id }: BuscarOrgReq): Promise<BuscarOrgRes> {
     const org = await this.orgRepository.findById(id);
 
     if (!org) {

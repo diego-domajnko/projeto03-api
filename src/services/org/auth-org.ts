@@ -1,7 +1,7 @@
 import { OrgRepository } from "@/repositories/org";
 import { Org } from "@prisma/client";
 import { compare } from "bcrypt";
-import { CredenciaisInvalidasError } from "./errors/credencials-invalidas-error";
+import { CredenciaisInvalidasError } from "../errors/credencials-invalidas-error";
 
 interface AuthOrgReq {
   email: string;

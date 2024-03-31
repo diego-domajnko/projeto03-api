@@ -1,16 +1,16 @@
 import { InMemoryOrgRepository } from "@/repositories/in-memory/in-memory-org";
 import { beforeEach, describe, expect, it } from "vitest";
-import { OrgService } from "./org";
+import { BuscarOrgService } from "./buscar-org";
 import { hash } from "bcrypt";
-import { OrganizacaoNaoEncontradaError } from "./errors/organizacao-nao-encontrada-error";
+import { OrganizacaoNaoEncontradaError } from "../errors/organizacao-nao-encontrada-error";
 
 describe("Usos de caso de validação de organização", () => {
   let orgRepository: InMemoryOrgRepository;
-  let sut: OrgService;
+  let sut: BuscarOrgService;
 
   beforeEach(() => {
     orgRepository = new InMemoryOrgRepository();
-    sut = new OrgService(orgRepository);
+    sut = new BuscarOrgService(orgRepository);
   });
 
   it("Deve retornar uma organização", async () => {

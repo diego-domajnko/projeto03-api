@@ -1,8 +1,8 @@
 import { InMemoryOrgRepository } from "@/repositories/in-memory/in-memory-org";
 import { beforeEach, describe, expect, it } from "vitest";
 import { CreateOrgService } from "./criar-org";
-import { EmailJaExistenteError } from "./errors/email-ja-existente-error";
-import { CriacaoSenhaInvalidaError } from "./errors/criacao-senha-invalida-error";
+import { EmailJaExistenteError } from "../errors/email-ja-existente-error";
+import { CriacaoSenhaInvalidaError } from "../errors/criacao-senha-invalida-error";
 
 describe("Usos de caso de criação de organização", () => {
   let criarOrgRepository: InMemoryOrgRepository;
