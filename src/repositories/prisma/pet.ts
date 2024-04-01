@@ -44,7 +44,7 @@ export class PetRepository implements IPetRepository {
   }
 
   async findManyByCharacteristics(
-    characteristics: Caracteristicas,
+    { ambiente, energia, idade, independencia, porte }: Caracteristicas,
     orgs: string[]
   ): Promise<Pet[]> {
     const pets = await prisma.pet.findMany({
@@ -52,21 +52,11 @@ export class PetRepository implements IPetRepository {
         org_id: {
           in: orgs,
         },
-        ambiente: {
-          in: characteristics.ambiente,
-        },
-        energia: {
-          in: characteristics.energia,
-        },
-        idade: {
-          in: characteristics.idade,
-        },
-        independencia: {
-          in: characteristics.independencia,
-        },
-        porte: {
-          in: characteristics.porte,
-        },
+        ...(ambiente && ambiente.length ? { ambiente: { in: ambiente } } : {}),
+        ...(energia && energia.length ? { energia: { in: energia } } : {}),
+        ...(idade && idade.length ? { idade: { in: idade } } : {}),
+        ...(independencia && independencia.length ? { independencia: { in: independencia } } : {}),
+        ...(porte && porte.length ? { porte: { in: porte } } : {}),
       },
     });
 

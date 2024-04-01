@@ -63,7 +63,7 @@ export class CreateOrgService {
     const { uf, cidade } = await fetchCep(cep);
 
     const cadastrarUfService = new CriarUFService(this.ufRepository);
-    await cadastrarUfService.execute({ uf });
+    const { uf: novaUf } = await cadastrarUfService.execute({ uf });
     const cadastrarCidadeService = new CadastrarCidadeService(this.localizacaoRepository);
     const { localizacao } = await cadastrarCidadeService.execute({ cidade, uf });
 
@@ -75,6 +75,7 @@ export class CreateOrgService {
       whatsapp,
       password_hash: await hash(password, 6),
       localizacao_id: localizacao.id,
+      uf_id: novaUf.id,
     });
   }
 }

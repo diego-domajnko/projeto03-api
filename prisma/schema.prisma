@@ -49,12 +49,12 @@ model Org {
   email          String      @unique
   cep            String
   endereco       String
-  whatsapp       String      @unique
+  whatsapp       String
   password_hash  String
   pets           Pet[]
   localizacao    Localizacao @relation(fields: [localizacao_id], references: [id])
   localizacao_id Int
-  uf             Uf?         @relation(fields: [uf_id], references: [id])
+  Uf             Uf?         @relation(fields: [uf_id], references: [id])
   uf_id          Int?
 
   @@map("orgs")
