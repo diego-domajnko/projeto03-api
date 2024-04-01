@@ -19,23 +19,26 @@ export async function buscarPetPorIdController(req: FastifyRequest, res: Fastify
 
     const buscarOrgPorIdService = makeBuscarOrgService();
     const {
-      org: { email, responsavel, whatsapp, endereco },
+      org: { email, responsavel, whatsapp, endereco, cep },
     } = await buscarOrgPorIdService.execute({ id: org_id });
 
     const response: IPet = {
+      id,
       nome,
       ambiente,
       energia,
       idade,
       independencia,
       porte,
-      requisitos,
+      requisitos: requisitos?.split(",") ?? null,
       sobre,
       org: {
+        id: org_id,
         email,
         responsavel,
         whatsapp,
         endereco,
+        cep,
       },
     };
 

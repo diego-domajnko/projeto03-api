@@ -7,5 +7,5 @@ export async function orgController(req: FastifyRequest, res: FastifyReply) {
   const orgService = makeBuscarOrgService();
   const { org } = await orgService.execute({ id });
 
-  return res.status(200).send({ org: { ...org, password_hash: undefined } });
+  return res.status(200).send({ ...org, password_hash: undefined });
 }

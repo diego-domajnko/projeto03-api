@@ -15,13 +15,14 @@ export async function criarPetController(req: FastifyRequest, res: FastifyReply)
       .enum([Independencia.ALTO, Independencia.BAIXO, Independencia.MEDIO])
       .nullable(),
     ambiente: z.enum([Ambiente.AMPLO, Ambiente.MEDIO, Ambiente.PEQUENO]).nullable(),
-    requisitos: z.string().nullable(),
+    requisitos: z.string().nullable().array(),
   });
 
   const { ambiente, energia, idade, independencia, nome, porte, requisitos, sobre } =
     bodySchema.parse(req.body);
 
   try {
+    const requisitorJoin = requisitos.join(",");
     const criarPetService = makeCriarPetService();
     await criarPetService.execute({
       ambiente,
@@ -31,7 +32,7 @@ export async function criarPetController(req: FastifyRequest, res: FastifyReply)
       nome,
       org_id: req.user.sub,
       porte,
-      requisitos,
+      requisitos: requisitorJoin,
       sobre,
     });
 
